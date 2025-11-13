@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Stress & Emotion Toolkit</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:wght@900&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      margin:0; padding:0;
+      background:#f6faff; color:#1e314d;
+      font-family:Inter, Arial, sans-serif;
+      min-height:100vh; line-height:1.72;
+    }
+    * { box-sizing: border-box; }
+    .wrap { max-width:1160px; margin:0 auto; padding:0 20px; }
+    header {
+      background:#fff; border-bottom:1.7px solid #e0f6ff;
+      box-shadow:0 2px 14px #5bdfce16;
+      position:sticky;top:0;z-index:7;
+    }
+    .nav { display:flex;align-items:center;justify-content:space-between; padding:18px 0 7px; gap:10px; }
+    .brand { display:flex;align-items:center;gap:11px; font-family:'Playfair Display',serif; font-size:2em;font-weight:900;color:#167baa;text-decoration:none; }
+    .logo { width:36px;height:36px;min-width:36px; border-radius:50%; background:linear-gradient(111deg,#27afe9,#5ce59f 80%);}
+    nav { display:flex;gap:0.3em;}
+    nav a { color:#1e314d;padding:8px 19px;border-radius:9px;font-size:17px;font-weight:700;text-decoration:none; transition:.11s;}
+    nav a:hover, .cta {background:linear-gradient(92deg,#21a1e9 60%,#5ce59f 100%);color:#fff!important;}
+    .cta {font-weight:800;}
+
+    main {margin-bottom:50px;}
+    section {margin-bottom:42px;}
+
+    /* New intro flex row for half image/half content */
+    .intro {
+      background:#fff; border-radius:22px; box-shadow:0 8px 36px #b9e9fd2c, 0 2px 7px #c6f4f8a8;
+      margin:34px 0 38px 0; display: flex; flex-wrap:wrap; align-items:center; padding:32px 36px;
+      min-height:320px;
+    }
+    .intro-content {
+      flex:1 1 340px; min-width:250px; max-width:48%;
+      display:flex; flex-direction:column; align-items:flex-start; justify-content:center;
+      padding-right:32px;
+    }
+    .intro-content h2 {
+      font-family:'Playfair Display', serif; font-size:2.28em;font-weight:900;margin:0 0 13px;color:#1588c7; letter-spacing:-1px;
+    }
+    .intro-content p {
+      font-size:1.12em; color:#476085; margin-bottom:0; max-width:420px;
+    }
+    .intro-img {
+      flex:1 1 340px; min-width:230px; max-width:52%;
+      display:flex; justify-content:center; align-items:center; min-height:220px;
+    }
+    .intro-img img {
+      width:100%; max-width:410px; height:auto;
+      border-radius:20px; box-shadow:0 8px 28px #70cdfa1c;
+      object-fit:cover;
+      display:block;
+    }
+    @media (max-width:950px){
+      .intro { flex-direction:column; padding:26px 10vw 26px; }
+      .intro-content, .intro-img { max-width:100%; flex:auto; padding-right:0; }
+      .intro-img img {max-width:340px;}
+    }
+    @media (max-width:600px){
+      .intro { padding:13px 3vw; }
+      .intro-img img {max-width:94vw;}
+      .intro-content h2 {font-size:1.15em;}
+    }
+    .subtitle { margin:3px 0 18px; font-size:1.08em; color:#278aca;font-weight:600; letter-spacing:0.05em; }
+
+    /* Card grid */
+    .card-row, .activity-row, .journal-row {
+      display:grid;gap:29px;margin-bottom:10px;align-items: stretch;width:100%;
+    }
+    .card-row {grid-template-columns:repeat(3,1fr);}
+    .activity-row {grid-template-columns:repeat(4,1fr);}
+    .journal-row {grid-template-columns:repeat(2,1fr);}
+    @media (max-width: 1100px){
+      .card-row{grid-template-columns:repeat(2,1fr);}
+      .activity-row{grid-template-columns:repeat(2,1fr);}
+      .journal-row{grid-template-columns:1fr;}
+    }
+    @media (max-width: 700px){
+      .card-row,.activity-row,.journal-row{grid-template-columns:1fr;}
+    }
+
+    .card, .act, .journal, .journal-prompt {
+      background:#fff; border:1.4px solid #dde6f2; border-radius:20px;
+      box-shadow:0 6px 28px #cdeaff13, 0 2px 7px #c6f4f8a8;
+      display:flex;flex-direction:column;min-width:0;align-items:stretch; position:relative;
+      margin:0; overflow:hidden;
+    }
+    .card:hover, .act:hover { box-shadow:0 12px 40px #16d1fa12, 0 2px 7px #5ce59f10; transform:translateY(-3px) scale(1.012);}
+    .cover, .act-img { width:100%;min-height:120px;background:#eaf8fc;
+      display:flex;align-items:center;justify-content:center;
+      border-top-left-radius:20px; border-top-right-radius:20px; overflow:hidden;
+    }
+    .cover img, .act-img img {
+      width:100%;max-width:100%;height:180px;object-fit:cover;
+      border-top-left-radius:20px; border-top-right-radius:20px;
+      transition:filter .14s; filter:brightness(98%) saturate(108%);
+    }
+    .card-content, .txt {
+      padding:21px 23px 16px;
+      display:flex;flex-direction:column;flex:1 1 auto; position:relative;
+      min-width:0; word-break:break-word; overflow-wrap:break-word;
+    }
+    .card h3,.journal h3,.journal-prompt h3 {font-size:1.18em;margin:4px 0 11px 0;font-family:'Playfair Display',serif;}
+    .tag {font-size:13.6px;color:#21a1e9;margin-bottom:6px;letter-spacing:.01em;}
+    .title-secondary {font-size:1em;color:#41a3db;margin-bottom:7px;}
+
+    /* Compact pill, no overflow */
+    .pill {
+      display:block;
+      margin:12px auto 0 auto;
+      background:linear-gradient(96deg,#16d1fa 50%,#78ffd6 100%);
+      color:#167baa;
+      font-weight:800; font-size:0.92em;
+      letter-spacing:.02em;
+      box-shadow:0 2px 15px #b9f9ce2e;
+      padding:7px 15px 6px 15px;
+      border-radius:99px;text-align:center;white-space:nowrap;
+      min-width:80px; max-width:96%; border:1px solid #bfefff;
+      transition:background .13s,color .12s;
+      line-height:1.6; overflow-wrap:break-word; word-break:break-word;
+    }
+    .callout {
+      background: #e0f6ff; color: #1781ba; padding: 14px 19px; border-radius: 13px;
+      margin:22px 0 11px; font-size:1em; box-shadow:0 1px 10px #e0f6ff10;
+      font-weight:600; letter-spacing:.01em;
+    }
+    .btn {
+      display:inline-block;border:none;outline:none;cursor:pointer;
+      background:linear-gradient(90deg,#21a1e9 60%,#5ce59f 100%);
+      color:#fff;font-size:.97em;font-weight:800;border-radius:99px;
+      padding:8px 23px;margin-top:14px;box-shadow:0 3px 15px #21a1e91d;
+      letter-spacing:.01em;min-width:80px;min-height:37px;max-width:170px;
+      transition: background .13s,transform .13s, box-shadow .12s;
+    }
+    .btn-save{background:linear-gradient(98deg,#16d1fa 9%,#78ffd6 95%);}
+    .btn-reflect{background:linear-gradient(102deg, #34c759 16%, #36bbd3 93%);}
+    .btn-cycle{background:linear-gradient(100deg,#08d1f7,#4fd6b4 99%);}
+    .btn-clear{background:linear-gradient(97deg,#fa5f7a 33%,#ffcfcf 97%);}
+    .btn:hover {opacity:.97;transform:scale(1.06);filter:brightness(102%)}
+    .act .btn{width:86%;max-width:160px;display:block;margin:15px auto 0 auto;}
+    .save-clear-row{display:flex;gap:14px;margin:11px 0 0 0;}
+    textarea[aria-label]{font-size:16px;font-family:Inter,sans-serif; border-radius:10px;border:1.2px solid #dde6f2;width:100%;min-height:90px;padding:10px;margin-bottom:5px;}
+    textarea[aria-label]:focus{border-color:#5ce59f; outline:none;}
+    @media (max-width:900px){
+      .journal-row{grid-template-columns:1fr;}
+      .journal,.journal-prompt{min-width:0;}
+    }
+    footer {background:#fafdff; border-top:1.2px solid #e0f6ff; margin-top:28px; padding:0 0 16px 0;}
+    footer .wrap {padding:0;}
+    footer p {font-size:12.8px;color:#65718b;margin-bottom:5px;margin-top:0;}
+    footer .logo {width:22px;height:22px;}
+    html { scroll-behavior:smooth;}
+  </style>
+</head>
+<body>
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="#"><div class="logo"></div>Stress & Emotion Toolkit</a>
+    <nav>
+      <a class="active" href="#themes">Themes</a>
+      <a href="#science">Science</a>
+      <a href="#activities">Exercises</a>
+      <a href="#reflect" class="cta">Reflect</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+  <!-- INTRO flex row -->
+  <section class="intro">
+    <div class="intro-content">
+      <h2>Welcome to Your Modern Toolkit for Managing Stress & Emotions</h2>
+      <p>Transform stress into power and emotions into confidence with easy-to-use tools, science-based tips, and daily exercises designed for real life. Discover how simple habits and smart strategies can lift your mood, sharpen your focus, and help you thrive in every moment. Start your journey to a happier, stronger you, where well-being is just a step away!</p>
+    </div>
+    <div class="intro-img">
+      <!-- You can change to any image here! Example is a calm young woman looking outside -->
+      <img src="https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?auto=format&fit=crop&w=800&q=80" alt="Peaceful sunrise and new beginnings, stress relief">
+    </div>
+  </section>
+
+  <!-- THEMES -->
+  <section id="themes">
+    <h2>Key Principles for Managing Stress & Emotions</h2>
+    <div class="subtitle">Fundamentals for staying balanced during challenges and daily life.</div>
+    <div class="card-row">
+      <article class="card">
+        <div class="cover">
+          <img src="https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=800&q=80" alt="Writing in a journal, self check-in"/>
+        </div>
+        <div class="card-content">
+          <div class="tag">Awareness & Labeling</div>
+          <h3>Recognize & Name</h3>
+          <div class="title-secondary">What’s my feeling, and where is it in my body?</div>
+          <p>Tuning into what you feel and where you feel it can instantly ease tension and bring calm. Simply naming your emotion helps your mind process stress and brings clarity in the moment.</p>
+          <ul style="margin:8px 0 0 18px;">
+            <li>Scan your body for tension-jaw, chest, hands, or stomach.</li>
+            <li>Say or write what you’re feeling (“stressed,” “hopeful,” etc.).</li>
+            <li>Check if your discomfort lessens after expressing it.</li>
+          </ul>
+          <span class="pill">Scan + label, 3×/day</span>
+        </div>
+      </article>
+      <article class="card">
+        <div class="cover">
+          <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80" alt="Deep breath in nature"/>
+        </div>
+        <div class="card-content">
+          <div class="tag">Regulation & Reset</div>
+          <h3>Breathe, Move, Reset</h3>
+          <div class="title-secondary">The simplest body change beats overthinking.</div>
+          <p>A quick shift in your body like taking a deep breath or moving can calm your mind faster than overthinking. Simple physical resets help interrupt stress and restore balance.</p>
+          <ul style="margin:8px 0 0 18px;">
+            <li>Take slow, deep breaths; Exhale longer than your inhale.</li>
+            <li>Stand up, stretch, or shake out your hands and shoulders.</li>
+            <li>Feel your mood shift with simple movement.</li>
+          </ul>
+          <span class="pill">Act to feel better,don’t just think it</span>
+        </div>
+      </article>
+      <article class="card">
+        <div class="cover"><img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=800&q=80" alt="Movement in nature"/></div>
+        <div class="card-content">
+          <div class="tag">Express & Complete</div>
+          <h3>Don’t Bottle, Do Something</h3>
+          <div class="title-secondary">Release stress with healthy self-expression and closure.</div>
+          <p>Expressing emotions through movement or creativity helps release stress and bring relief. Don’t bottle up feelings-take action to complete the stress cycle.</p>
+          <ul style="margin:8px 0 0 18px;">
+            <li>Move your body: walk, dance, or stretch.</li>
+            <li>Write, draw, or talk about what you’re feeling-even if it’s messy.</li>
+            <li>Connect with someone supportive to share and lighten your load.</li>
+          </ul>
+          <span class="pill">Action closes the stress loop</span>
+        </div>
+      </article>
+    </div>
+    <div class="callout">✔️ Combine these: Recognize, breathe/reset, act/connect. Growth happens in practice, not just knowledge.</div>
+  </section>
+
+  <!-- SCIENCE -->
+  <section id="science">
+    <h2>The Science of Emotional Reset</h2>
+    <div class="subtitle">Your body, brain, and habits are “re-wireable” with simple, proven actions.</div>
+    <div class="card-row">
+      <article class="card">
+        <div class="cover"><img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=800&q=80" alt="Brainwaves"/></div>
+        <div class="card-content">
+          <div class="tag">Nervous System</div>
+          <h3>Physiology’s Fast Path</h3>
+          <p>Your heartbeat, breath, and muscles work as switches for stress or relaxation.By stretching gently and breathing slowly, you reassure your brain that you are safe, all without trying.</p>
+          <ul style="margin:8px 0 0 18px;">
+            <li>Try three big sigh out breaths to relax instantly.</li>
+            <li>Notice your posture. Sitting up straight supports calm, but slouching can bring more stress.</li>
+          </ul>
+          <span class="pill">Body leads, mind follows</span>
+        </div>
+      </article>
+      <article class="card">
+        <div class="cover">
+          <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80" alt="Support group, empathy, encouragement and connection"/>
+        </div>
+        <div class="card-content">
+          <div class="tag">Brain: Words Relieve</div>
+          <h3>Label & Connect</h3>
+          <p>Naming your emotions, on paper or out loud, or simply saying I am stressed helps quiet your inner alarm. Reaching out to someone, even with a quick message, brings extra relief for both of you.</p>
+          <ul style="margin:8px 0 0 18px;">
+            <li>Write down or say out loud how you feel and why.</li>
+            <li>Share your feelings with someone. It helps you feel calmer.</li>
+          </ul>
+          <span class="pill">Give stress a voice!</span>
+        </div>
+      </article>
+      <article class="card">
+        <div class="cover"><img src="https://images.unsplash.com/photo-1465101178521-c1a9136a2758?auto=format&fit=crop&w=800&q=80" alt="Habits movement"/></div>
+        <div class="card-content">
+          <div class="tag">Mini-habits → Major change</div>
+          <h3>Consistent Practice Wins</h3>
+          <p>Brains change through daily habits, not just extra effort. Even five minutes of routine reset is more powerful than forcing yourself to push through. You can anchor these resets to simple moments like riding the bus, or brushing your teeth with gratitude.</p>
+          <ul style="margin:8px 0 0 18px;">
+            <li>Set a reminder for a one-minute breathing break.</li>
+            <li>Make checking in with a friend part of your daily routine.</li>
+          </ul>
+          <span class="pill">Tiny changes shape your life</span>
+        </div>
+      </article>
+    </div>
+    <div class="callout">✨ Long-term calm isn’t magic, it's just small, steady, doable steps.</div>
+  </section>
+
+  <!-- EXERCISES -->
+  <section id="activities">
+    <h2>Exercises for Everyday Stress & Emotion Mastery</h2>
+    <div class="activity-row">
+      <article class="act">
+        <div class="act-img"><img src="https://images.unsplash.com/photo-1519681393-6c6c7b6cd90a?auto=format&fit=crop&w=800&q=80" alt="Eyes-closed, deep breathing in sunlight"/></div>
+        <div class="txt">
+          <h4 style="margin-bottom:7px;">Box Breathing (4-4-4-4)</h4>
+          <p style="margin-bottom:0;">Breathe in for four seconds, hold for four, slowly breathe out for four, and pause for four.</p>
+          <button class="btn btn-cycle" onclick="startDeepBreath()">Start Cycle</button>
+        </div>
+      </article>
+      <article class="act">
+        <div class="act-img"><img src="https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=800&q=80" alt="Writing notes at desk"/></div>
+        <div class="txt">
+          <h4 style="margin-bottom:7px;">Quick Stress Journal</h4>
+          <p style="margin-bottom:0;">A quick stress journal helps you spot what feels heavy and choose one small thing to lighten your mood.</p>
+          <button class="btn btn-reflect" onclick="focusJournal()">Reflect Now</button>
+        </div>
+      </article>
+      <article class="act">
+        <div class="act-img"><img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=800&q=80" alt="Green walk in sunlight"/></div>
+        <div class="txt">
+          <h4 style="margin-bottom:7px;">Nature Reset Walk</h4>
+          <p style="margin-bottom:0;">Move for three minutes. Notice three things you see, two you hear, one you touch.</p>
+        </div>
+      </article>
+      <article class="act">
+        <div class="act-img"><img src="https://images.unsplash.com/photo-1504196606672-aef5c9cefc92?auto=format&fit=crop&w=800&q=80" alt="Morning stretch and yawn"/></div>
+        <div class="txt">
+          <h4 style="margin-bottom:7px;">3 Small Gratitudes</h4>
+          <p style="margin-bottom:0;">Name three things you appreciate today. Daily gratitude grows optimism.</p>
+        </div>
+      </article>
+    </div>
+    <div class="activity-row">
+      <article class="act">
+        <div class="act-img"><img src="https://images.unsplash.com/photo-1520974692530-8b4e74a3ab87?auto=format&fit=crop&w=800&q=80" alt="Hand over heart"/></div>
+        <div class="txt">
+          <h4 style="margin-bottom:7px;">Compassion Pause</h4>
+          <p style="margin-bottom:0;">Place your hand on your heart and take a gentle breath. Remind yourself, “I’m going through a lot, but I deserve my own kindness.”</p>
+        </div>
+      </article>
+      <article class="act">
+        <div class="act-img"><img src="https://images.unsplash.com/photo-1511988617509-a57c8a288659?auto=format&fit=crop&w=800&q=80" alt="Notebook gratitude list"/></div>
+        <div class="txt">
+          <h4 style="margin-bottom:7px;">Stretch & Yawn</h4>
+          <p style="margin-bottom:0;">Reach your arms up, gently roll your neck, take a full yawn, and sigh out. Let each exhale gently release tension and welcome relaxation into your whole body.</p>
+        </div>
+      </article>
+      <article class="act">
+        <div class="act-img"><img src="https://images.unsplash.com/photo-1465101178521-c1a9136a2758?auto=format&fit=crop&w=800&q=80" alt="On phone, gentle support"/></div>
+        <div class="txt">
+          <h4 style="margin-bottom:7px;">Social Check-In</h4>
+          <p style="margin-bottom:0;">Send a quick text or call someone to share, “It’s been a rough day, just wanted to check in.” Reaching out lightens your stress and builds connection.</p>
+        </div>
+      </article>
+      <article class="act">
+        <div class="act-img"><img src="https://images.unsplash.com/photo-1508704019880-7f1b1b7f9175?auto=format&fit=crop&w=800&q=80" alt="Phone down, peaceful break"/></div>
+        <div class="txt">
+          <h4 style="margin-bottom:7px;">Digital Off, 5 Minutes</h4>
+          <p style="margin-bottom:0;">Put your phone away and give yourself five minutes to just breathe, stretch, or gaze out the window and notice how your mind resets.</p>
+        </div>
+      </article>
+    </div>
+    <div class="callout"><b>Tip:</b> Practice before the panic. Tiny resets practiced daily build a strong calm reflex.</div>
+  </section>
+
+  <!-- REFLECTION JOURNAL -->
+  <section id="reflect">
+    <h2>Reflection Journal</h2>
+    <div class="journal-row" style="gap:18px;">
+      <article class="journal-prompt journal">
+        <div class="card-content">
+          <h3>Reflection Prompts</h3>
+          <ul>
+            <li>What triggered stress or emotion today? Where?</li>
+            <li>What skill or exercise did you try? What changed?</li>
+            <li>Something you are proud of (even surviving is a win).</li>
+          </ul>
+          <span class="pill">This is just for you</span>
+        </div>
+      </article>
+      <article class="journal card">
+        <div class="card-content">
+          <h3>My Notes</h3>
+          <textarea aria-label="Reflection text area" placeholder="Type here"></textarea>
+          <div class="save-clear-row">
+            <button class="btn btn-save" onclick="saveNote()">Save</button>
+            <button class="btn btn-clear" onclick="clearNote()">Clear</button>
+          </div>
+        </div>
+      </article>
+    </div>
+    <div class="callout">Check your reflections weekly and see your progress!</div>
+  </section>
+</main>
+<footer>
+  <div class="wrap" style="padding:0;">
+    <div style="display:flex;align-items:center;gap:9px;margin-bottom:4px;">
+      <div class="logo" style="width:22px;height:22px"></div>
+      <span style="font-size:13.6px;">Stress & Emotion Toolkit</span>
+    </div>
+    <p>Created by Synapse Squad</p>
+  </div>
+</footer>
+<script>
+  // Responsive images
+  (function strengthenImages(){
+    const imgs = Array.from(document.querySelectorAll('img'));
+    imgs.forEach((img, i) => {
+      img.loading='lazy';
+      img.style.objectFit='cover';
+      img.style.width='100%';
+      img.style.background='#f3fdff';
+      try{img.referrerPolicy='no-referrer';}catch(e){}
+      img.addEventListener('error', () => {
+        if(img.dataset.fallbackApplied) return;
+        img.dataset.fallbackApplied='1';
+        img.src=`https://picsum.photos/seed/stressimg${i}/800/420`;
+        img.style.filter='saturate(1.08) brightness(1.04)';
+      },{once:true});
+    });
+  })();
+  // Reflection journal (local storage)
+  const STORAGE_KEY = 'reflect_stress_journal';
+  const textarea = document.querySelector('textarea[aria-label="Reflection text area"]');
+  (function loadNote(){
+    try{
+      const existing = localStorage.getItem(STORAGE_KEY);
+      if(existing){ textarea.value = existing; }
+    }catch(e){}
+  })();
+  function saveNote(){
+    try{
+      localStorage.setItem(STORAGE_KEY, textarea.value || '');
+      alert('Saved (private, only in your browser)');
+    }catch(e){
+      alert('Could not save. Check browser settings.');
+    }
+  }
+  function clearNote(){
+    if(confirm('Clear your note?')){
+      textarea.value = '';
+      try{ localStorage.removeItem(STORAGE_KEY);}catch(e){}
+    }
+  }
+  // Breathing modal
+  function startDeepBreath(){
+    let times=4,step=0,closed=false;
+    const steps=['Inhale (4s)','Hold (4s)','Exhale (4s)','Hold (4s)'];
+    const msg=document.createElement('div');
+    msg.setAttribute('style','position:fixed;left:50%;top:32%;background:#fff;border:2.2px solid #2cbecf;padding:28px 22px 20px 22px;min-width:180px;min-height:118px;border-radius:13px;box-shadow:0 7px 32px #2cbecf19;font-size:1.04em;z-index:99999;text-align:center;transform:translate(-50%,-30%);display:flex;flex-direction:column;align-items:center;');
+    document.body.appendChild(msg);
+
+    const closeBtn=document.createElement('button');
+    closeBtn.textContent="×";
+    closeBtn.className="btn";
+    closeBtn.style.cssText="position:absolute;top:7px;right:11px;background:#eaf9fb;color:#1ba0c7;font-weight:900;font-size:1.05em;line-height:1;padding:1px 12px 1.5px 12px;border-radius:16px;border:1px solid #bce5fa;cursor:pointer;z-index:2;min-width:unset;min-height:unset;";
+    closeBtn.onclick=()=>{closed=true;msg.remove();};
+    msg.appendChild(closeBtn);
+
+    const circle=document.createElement('div');
+    circle.style.cssText="width:38px;height:38px;min-width:34px;min-height:34px;background:radial-gradient(circle at 54% 51%, #ccfcfb 57%, #2cbecf55 100%);margin:0 auto 9px auto;border-radius:50%;border:2px solid #9fedca;transition:.43s;";
+    msg.appendChild(circle);
+
+    function finish(){
+      msg.innerHTML='<div style="margin:16px 0 7px;font-size:.99em;color:#2cbecf;">Done!<br></div><button class="btn btn-cycle" style="margin-top:7px;" onclick="this.parentNode.remove()">Close</button>';
+    }
+    let run=()=>{
+      if(closed) return;
+      let scale=1;
+      if(step%4===0) scale=1.14;
+      else if(step%4===2) scale=0.8;
+      circle.style.transform=`scale(${scale})`;
+      msg.innerHTML=`<button class="btn" style="${closeBtn.style.cssText}">${closeBtn.textContent}</button>`+circle.outerHTML+
+        `<div style="margin:10px 0 0 0;font-size:.93em;">${steps[step%4]}</div>
+        <div style="margin:2px 0 0 0;font-size:.81em;color:#7c8cb7;"></div>`;
+      msg.querySelector('button').onclick=closeBtn.onclick;
+      setTimeout(()=>{
+        step++;if(step%4==0) times--;if(times<=0){finish();return;}run();
+      },4000);
+    };
+    run();
+  }
+  function focusJournal(){
+    window.scrollTo({top:document.querySelector('#reflect').offsetTop-34,behavior:'smooth'});
+    setTimeout(()=>{ textarea && textarea.focus(); },140);
+  }
+</script>
+</body>
+</html>
